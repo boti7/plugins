@@ -48,6 +48,11 @@ class MapUiBodyState extends State<MapUiBody> {
   bool _tiltGesturesEnabled = true;
   bool _zoomGesturesEnabled = true;
   bool _myLocationEnabled = true;
+  bool _myLocationButtonEnabled = true;
+  int _locationButton = 0;
+  LatLng _tapped = const LatLng(0, 0);
+  LatLng _tappedLong = const LatLng(0, 0);
+  LatLng _tappedLocation = const LatLng(0, 0);
 
   @override
   void initState() {
@@ -58,6 +63,22 @@ class MapUiBodyState extends State<MapUiBody> {
     setState(() {
       _extractMapInfo();
     });
+  }
+
+  void _onLocationClick(LatLng location) {
+    _tappedLocation = location;
+  }
+
+  void _onLocationButtonClick() {
+    _locationButton++;
+  }
+
+  void _onMapLongTapped(LatLng location) {
+    _tappedLong = location;
+  }
+
+  void _onMapTapped(LatLng location) {
+    _tapped = location;
   }
 
   void _extractMapInfo() {
@@ -182,22 +203,34 @@ class MapUiBodyState extends State<MapUiBody> {
     );
   }
 
+  Widget _myLocationButtonToggler() {
+    return FlatButton(
+      child: Text(
+          '${_myLocationButtonEnabled ? 'disable' : 'enable'} my location button'),
+      onPressed: () {
+        setState(() {
+          _myLocationButtonEnabled = !_myLocationButtonEnabled;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final GoogleMap googleMap = GoogleMap(
-      onMapCreated: onMapCreated,
-      initialCameraPosition: _kInitialPosition,
-      trackCameraPosition: true,
-      compassEnabled: _compassEnabled,
-      cameraTargetBounds: _cameraTargetBounds,
-      minMaxZoomPreference: _minMaxZoomPreference,
-      mapType: _mapType,
-      rotateGesturesEnabled: _rotateGesturesEnabled,
-      scrollGesturesEnabled: _scrollGesturesEnabled,
-      tiltGesturesEnabled: _tiltGesturesEnabled,
-      zoomGesturesEnabled: _zoomGesturesEnabled,
-      myLocationEnabled: _myLocationEnabled,
-    );
+        onMapCreated: onMapCreated,
+        initialCameraPosition: _kInitialPosition,
+        trackCameraPosition: true,
+        compassEnabled: _compassEnabled,
+        cameraTargetBounds: _cameraTargetBounds,
+        minMaxZoomPreference: _minMaxZoomPreference,
+        mapType: _mapType,
+        rotateGesturesEnabled: _rotateGesturesEnabled,
+        scrollGesturesEnabled: _scrollGesturesEnabled,
+        tiltGesturesEnabled: _tiltGesturesEnabled,
+        zoomGesturesEnabled: _zoomGesturesEnabled,
+        myLocationEnabled: _myLocationEnabled,
+        myLocationButtonEnabled: _myLocationButtonEnabled);
 
     final List<Widget> columnChildren = <Widget>[
       Padding(
@@ -223,6 +256,12 @@ class MapUiBodyState extends State<MapUiBody> {
                   '${_position.target.longitude.toStringAsFixed(4)}'),
               Text('camera zoom: ${_position.zoom}'),
               Text('camera tilt: ${_position.tilt}'),
+              Text('location button clicked: $_locationButton'),
+              Text(
+                  'my location tapped: ${_tappedLocation.latitude} ${_tappedLocation.longitude}'),
+              Text('map tapped: ${_tapped.latitude} ${_tapped.longitude}'),
+              Text(
+                  'map long tapped: ${_tappedLong.latitude} ${_tappedLong.longitude}'),
               Text(_isMoving ? '(Camera moving)' : '(Camera idle)'),
               _compassToggler(),
               _latLngBoundsToggler(),
@@ -233,6 +272,7 @@ class MapUiBodyState extends State<MapUiBody> {
               _tiltToggler(),
               _zoomToggler(),
               _myLocationToggler(),
+              _myLocationButtonToggler(),
             ],
           ),
         ),
@@ -248,6 +288,11 @@ class MapUiBodyState extends State<MapUiBody> {
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
     mapController.addListener(_onMapChanged);
+    mapController.onMapLongTapped.add(_onMapLongTapped);
+    mapController.onMapTapped.add(_onMapTapped);
+    mapController.onLocationButtonClick.add(_onLocationButtonClick);
+    mapController.onLocationClick.add(_onLocationClick);
+    mapController.onMapLongTapped.add(_onMapLongTapped);
     _extractMapInfo();
     setState(() {});
   }

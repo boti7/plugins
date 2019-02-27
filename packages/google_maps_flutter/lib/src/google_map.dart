@@ -21,6 +21,7 @@ class GoogleMap extends StatefulWidget {
     this.tiltGesturesEnabled = true,
     this.trackCameraPosition = false,
     this.myLocationEnabled = false,
+    this.myLocationButtonEnabled = false,
   }) : assert(initialCameraPosition != null);
 
   final MapCreatedCallback onMapCreated;
@@ -81,6 +82,9 @@ class GoogleMap extends StatefulWidget {
   /// `Info.plist` file. This will automatically prompt the user for permissions
   /// when the map tries to turn on the My Location layer.
   final bool myLocationEnabled;
+
+  /// myLocationEnabled must be true for this button to be displayed, if myLocationButtonEnabled is true the location button is displayed else it is not.
+  final bool myLocationButtonEnabled;
 
   /// Which gestures should be consumed by the map.
   ///
@@ -181,6 +185,7 @@ class _GoogleMapOptions {
     this.trackCameraPosition,
     this.zoomGesturesEnabled,
     this.myLocationEnabled,
+    this.myLocationButtonEnabled,
   });
 
   static _GoogleMapOptions fromWidget(GoogleMap map) {
@@ -195,6 +200,7 @@ class _GoogleMapOptions {
       trackCameraPosition: map.trackCameraPosition,
       zoomGesturesEnabled: map.zoomGesturesEnabled,
       myLocationEnabled: map.myLocationEnabled,
+      myLocationButtonEnabled: map.myLocationButtonEnabled,
     );
   }
 
@@ -218,6 +224,8 @@ class _GoogleMapOptions {
 
   final bool myLocationEnabled;
 
+  final bool myLocationButtonEnabled;
+
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> optionsMap = <String, dynamic>{};
 
@@ -237,6 +245,7 @@ class _GoogleMapOptions {
     addIfNonNull('zoomGesturesEnabled', zoomGesturesEnabled);
     addIfNonNull('trackCameraPosition', trackCameraPosition);
     addIfNonNull('myLocationEnabled', myLocationEnabled);
+    addIfNonNull('myLocationButtonEnabled', myLocationButtonEnabled);
     return optionsMap;
   }
 

@@ -4,7 +4,9 @@
 
 #import <Flutter/Flutter.h>
 #import <GoogleMaps/GoogleMaps.h>
+#import <UIKit/UIKit.h>
 #import "GoogleMapMarkerController.h"
+#import "GoogleMapPolylineController.h"
 
 // Defines map UI options writable from Flutter.
 @protocol FLTGoogleMapOptionsSink
@@ -18,6 +20,7 @@
 - (void)setTrackCameraPosition:(BOOL)enabled;
 - (void)setZoomGesturesEnabled:(BOOL)enabled;
 - (void)setMyLocationEnabled:(BOOL)enabled;
+- (void)setMyLocationButtonEnabled:(BOOL)enabled;
 @end
 
 // Defines map overlay controllable from Flutter.
@@ -35,6 +38,9 @@
 - (NSString*)addMarkerWithPosition:(CLLocationCoordinate2D)position;
 - (FLTGoogleMapMarkerController*)markerWithId:(NSString*)markerId;
 - (void)removeMarkerWithId:(NSString*)markerId;
+- (NSString*)addPolylineWithPath:(GMSPath*)path;
+- (FLTGoogleMapPolylineController*)polylineWithId:(NSString*)polylineId;
+- (void)removePolylineWithId:(NSString*)polylineId;
 @end
 
 // Allows the engine to create new Google Map instances.
