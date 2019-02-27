@@ -13,15 +13,16 @@ class GoogleMap extends StatefulWidget {
     this.gestureRecognizers,
     this.compassEnabled = true,
     this.cameraTargetBounds = CameraTargetBounds.unbounded,
+    this.mapToolbarEnabled = true,
     this.mapType = MapType.normal,
     this.minMaxZoomPreference = MinMaxZoomPreference.unbounded,
+    this.myLocationButtonEnabled = false,
+    this.myLocationEnabled = false,
     this.rotateGesturesEnabled = true,
     this.scrollGesturesEnabled = true,
     this.zoomGesturesEnabled = true,
     this.tiltGesturesEnabled = true,
     this.trackCameraPosition = false,
-    this.myLocationEnabled = false,
-    this.myLocationButtonEnabled = false,
   }) : assert(initialCameraPosition != null);
 
   final MapCreatedCallback onMapCreated;
@@ -85,6 +86,9 @@ class GoogleMap extends StatefulWidget {
 
   /// myLocationEnabled must be true for this button to be displayed, if myLocationButtonEnabled is true the location button is displayed else it is not.
   final bool myLocationButtonEnabled;
+  
+  /// True if the map toolbar (Directions, Open in Maps) is enabled.
+  final bool mapToolbarEnabled;
 
   /// Which gestures should be consumed by the map.
   ///
@@ -177,30 +181,32 @@ class _GoogleMapOptions {
   _GoogleMapOptions({
     this.compassEnabled,
     this.cameraTargetBounds,
+    this.mapToolbarEnabled,
     this.mapType,
     this.minMaxZoomPreference,
+    this.myLocationButtonEnabled,
+    this.myLocationEnabled,
     this.rotateGesturesEnabled,
     this.scrollGesturesEnabled,
     this.tiltGesturesEnabled,
     this.trackCameraPosition,
     this.zoomGesturesEnabled,
-    this.myLocationEnabled,
-    this.myLocationButtonEnabled,
   });
 
   static _GoogleMapOptions fromWidget(GoogleMap map) {
     return _GoogleMapOptions(
       compassEnabled: map.compassEnabled,
       cameraTargetBounds: map.cameraTargetBounds,
+      mapToolbarEnabled: map.mapToolbarEnabled,
       mapType: map.mapType,
       minMaxZoomPreference: map.minMaxZoomPreference,
+      myLocationButtonEnabled: map.myLocationButtonEnabled,
+      myLocationEnabled: map.myLocationEnabled,
       rotateGesturesEnabled: map.rotateGesturesEnabled,
       scrollGesturesEnabled: map.scrollGesturesEnabled,
       tiltGesturesEnabled: map.tiltGesturesEnabled,
       trackCameraPosition: map.trackCameraPosition,
       zoomGesturesEnabled: map.zoomGesturesEnabled,
-      myLocationEnabled: map.myLocationEnabled,
-      myLocationButtonEnabled: map.myLocationButtonEnabled,
     );
   }
 
@@ -225,6 +231,8 @@ class _GoogleMapOptions {
   final bool myLocationEnabled;
 
   final bool myLocationButtonEnabled;
+  
+  final bool mapToolbarEnabled;
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> optionsMap = <String, dynamic>{};
@@ -237,15 +245,16 @@ class _GoogleMapOptions {
 
     addIfNonNull('compassEnabled', compassEnabled);
     addIfNonNull('cameraTargetBounds', cameraTargetBounds?._toJson());
+    addIfNonNull('mapToolbarEnabled', mapToolbarEnabled);
     addIfNonNull('mapType', mapType?.index);
     addIfNonNull('minMaxZoomPreference', minMaxZoomPreference?._toJson());
+    addIfNonNull('myLocationButtonEnabled', myLocationButtonEnabled);
+    addIfNonNull('myLocationEnabled', myLocationEnabled);
     addIfNonNull('rotateGesturesEnabled', rotateGesturesEnabled);
     addIfNonNull('scrollGesturesEnabled', scrollGesturesEnabled);
     addIfNonNull('tiltGesturesEnabled', tiltGesturesEnabled);
     addIfNonNull('zoomGesturesEnabled', zoomGesturesEnabled);
     addIfNonNull('trackCameraPosition', trackCameraPosition);
-    addIfNonNull('myLocationEnabled', myLocationEnabled);
-    addIfNonNull('myLocationButtonEnabled', myLocationButtonEnabled);
     return optionsMap;
   }
 
